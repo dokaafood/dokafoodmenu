@@ -153,7 +153,6 @@
       const modalAddToCartBtn = document.getElementById('modal-add-to-cart');
       const toast = document.getElementById('toast-notification');
 
-      // Keranjang SELALU dimulai dari kosong.
       let cart = new Map();
 
       function renderMenu(filter = 'semua') {
@@ -229,6 +228,7 @@
         updateWhatsAppButton(total);
       }
       
+      // === FUNGSI YANG SUDAH DIPERBAIKI ===
       function updateWhatsAppButton(total) {
         const customerName = document.getElementById('customer-name').value;
         const customerAddress = document.getElementById('customer-address').value;
@@ -238,12 +238,21 @@
           waButton.classList.add('disabled');
         } else {
           waButton.classList.remove('disabled');
-          // --- GANTI NOMOR WHATSAPP ANDA DI SINI ---
-          const nomorWA = '6282136864085';
-          let waText = `Halo DokaFood! Saya ingin pesan:%0A%0A`;
-          cart.forEach((item, name) => { waText += `*${item.quantity}x* ${name}%0A`; });
-          waText += `-------------------------------%0A*Total: Rp${total.toLocaleString('id-ID')}*%0A-------------------------------%0A%0A`;
-          waText += `*Nama Pemesan:* ${customerName}%0A*Alamat/Asal:* ${customerAddress}%0A%0ATerima kasih!`;
+          const nomorWA = '6282136864085'; // Ganti dengan nomor WA Anda
+          
+          // Menggunakan `\n` untuk baris baru yang benar
+          let waText = `Halo DokaFood! Saya ingin pesan:\n\n`;
+          cart.forEach((item, name) => {
+              waText += `*${item.quantity}x* ${name}\n`;
+          });
+          waText += `-------------------------------\n`;
+          waText += `*Total: Rp${total.toLocaleString('id-ID')}*\n`;
+          waText += `-------------------------------\n\n`;
+          waText += `*Nama Pemesan:* ${customerName}\n`;
+          waText += `*Alamat/Asal:* ${customerAddress}\n\n`;
+          waText += `Terima kasih!`;
+          
+          // encodeURIComponent akan mengubah \n menjadi %0A secara otomatis
           waButton.href = `https://wa.me/${nomorWA}?text=${encodeURIComponent(waText)}`;
         }
       }
