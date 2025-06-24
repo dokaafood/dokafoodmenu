@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DokaFood - Pesanan (Final)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary-color: #d62828; --secondary-color: #a4161a; --accent-color: #f77f00;
+      --light-red: #ffe5e5; --light-gray: #eee; --dark-gray: #333; --white: #fff;
+      --green-whatsapp: #25D366; --text-color: #4a4a4a;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+    body { background: var(--white); color: var(--text-color); line-height: 1.6; overflow-x: hidden; }
+    
+    header { background: var(--white); border-bottom: 2px solid var(--light-gray); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); position: sticky; top: 0; z-index: 1000; }
+    header h1 { font-family: 'Poppins', sans-serif; font-size: 2.2rem; color: var(--primary-color); letter-spacing: -1px; }
+    nav a { color: var(--primary-color); text-decoration: none; margin-left: 1.8rem; font-weight: 600; }
+
+    .hero { background: linear-gradient(135deg, var(--light-red) 0%, #ffc0cb 100%); text-align: center; padding: 4rem 2rem; border-radius: 0 0 2rem 2rem; margin-bottom: 3rem; }
+    .hero h2 { font-family: 'Poppins', sans-serif; font-size: 3rem; color: var(--primary-color); margin-bottom: 1.2rem; }
+    .hero p { font-size: 1.1rem; margin-bottom: 2rem; color: var(--dark-gray); }
+    .cta-buttons a { display: inline-block; background: var(--primary-color); color: var(--white); padding: 1rem 2.2rem; border-radius: 30px; text-decoration: none; font-weight: bold; margin: 0.7rem; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+
+    .section-title { font-family: 'Poppins', sans-serif; text-align: center; font-size: 2.5rem; margin: 4rem 0 1rem; color: var(--primary-color); }
+    .section-title::after { content: ''; display: block; width: 80px; height: 5px; background: var(--accent-color); margin: 15px auto 0; border-radius: 3px; }
+    .filter-controls { text-align: center; margin-bottom: 2.5rem; }
+    .filter-btn { background: var(--white); color: var(--primary-color); border: 2px solid var(--primary-color); padding: 0.7rem 1.5rem; border-radius: 25px; cursor: pointer; margin: 0.5rem; font-weight: 700; transition: all 0.2s ease; }
+    .filter-btn.active { background: var(--primary-color); color: var(--white); }
+    .filter-btn:active, .action-btn:active { transform: scale(0.95); }
+
+    .menu-section { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; padding: 0 2rem 3rem; max-width: 1200px; margin: 0 auto; }
+    .item { background: var(--white); border-radius: 1.2rem; padding: 1.5rem; text-align: center; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; justify-content: space-between; }
+    .item img { width: 100%; height: 200px; object-fit: cover; border-radius: 1rem; margin-bottom: 1rem; }
+    .item h3 { font-family: 'Poppins', sans-serif; font-size: 1.5rem; margin: 0.5rem 0; color: var(--primary-color); }
+    .item .price-info { display: block; margin-top: 0.5rem; font-size: 1.25rem; color: var(--accent-color); font-weight: 800; }
+    .action-btn { background: var(--primary-color); color: var(--white); border: none; padding: 0.8rem 1.5rem; border-radius: 25px; cursor: pointer; margin-top: 1.2rem; font-weight: 700; width: 100%; }
+    
+    #cart { background: var(--white); padding: 3rem; margin: 4rem auto; border-radius: 1.8rem; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12); max-width: 900px; }
+    #cart h3 { font-family: 'Poppins', sans-serif; font-size: 2rem; margin-bottom: 2rem; text-align: center; }
+    #cart-items { margin-bottom: 1.5rem; border-top: 1px solid var(--light-gray); padding-top: 1rem; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px dashed var(--light-gray); }
+    .cart-item-info { flex-grow: 1; font-size: 1.2rem; }
+    .cart-item-controls { display: flex; align-items: center; gap: 0.8rem; }
+    .quantity-btn { background: var(--primary-color); color: var(--white); border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+    .quantity-display { min-width: 30px; text-align: center; font-weight: bold; font-size: 1.2rem; }
+    .remove-item-btn { background: #dc3545; border: none; color: white; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; }
+    .cart-total { font-weight: bold; margin-top: 2rem; color: var(--primary-color); font-size: 1.8rem; text-align: right; border-top: 2px solid var(--accent-color); padding-top: 1rem; }
+    
+    .customer-form { margin-top: 2rem; border-top: 1px solid var(--light-gray); padding-top: 2rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+    .form-group input { width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid #ccc; }
+    
+    .whatsapp-button { margin-top: 2.5rem; background: var(--green-whatsapp); color: var(--white); padding: 1.2rem 2.5rem; border: none; border-radius: 35px; font-size: 1.2rem; cursor: pointer; text-decoration: none; display: block; width: fit-content; margin: 2.5rem auto 0; }
+    .whatsapp-button.disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+    footer { background: var(--dark-gray); color: var(--white); text-align: center; padding: 2.5rem 1rem; margin-top: 5rem; }
+
+    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; animation: fadeIn 0.3s; }
+    .modal-content { background-color: var(--white); padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; text-align: left; }
+    .modal-content h3 { text-align: center; color: var(--primary-color); margin-bottom: 20px; }
+    .level-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .level-option { display: block; padding: 15px; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; }
+    .level-option input { margin-right: 10px; }
+    .level-option label { width: 100%; cursor: pointer; display: flex; justify-content: space-between; }
+    #modal-add-to-cart { width: 100%; }
+    
+    #toast-notification { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 3000; left: 50%; transform: translateX(-50%); bottom: 30px; font-size: 17px; opacity: 0; transition: all 0.5s; }
+    #toast-notification.show { visibility: visible; opacity: 1; bottom: 50px; }
+    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @media (max-width: 992px) { .menu-section { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) { .menu-section { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header><h1>DokaFood</h1><nav><a href="#menu-container">Menu</a><a href="#cart">Keranjang</a></nav></header>
+  <section class="hero">
+    <h2>Makan Enak ala DokaFood!</h2>
+    <p>Pesan menu kekinian favoritmu sekarang juga, dijamin bikin ketagihan!</p>
+    <div class="cta-buttons">
+      <a href="https://wa.me/6282136864085" target="_blank" rel="noopener noreferrer">Hubungi Kami</a>
+      <a href="https://instagram.com/kulinerpati" target="_blank" rel="noopener noreferrer">Lihat Instagram</a>
+    </div>
+  </section>
+  
+  <div id="menu-container">
+    <h2 class="section-title">Menu Pilihan</h2>
+    <div class="filter-controls">
+      <button class="filter-btn active" data-filter="semua">Semua</button>
+      <button class="filter-btn" data-filter="mie">Mie</button>
+      <button class="filter-btn" data-filter="pisang">Pisang</button>
+      <button class="filter-btn" data-filter="minuman">Minuman</button>
+    </div>
+    <section class="menu-section" id="menu-grid"></section>
+  </div>
+
+  <section id="cart">
+    <h3>Keranjang Belanja Anda</h3>
+    <div id="cart-items"><p id="empty-cart-message">Keranjang Anda kosong.</p></div>
+    <p class="cart-total" id="total">Total: Rp0</p>
+    <div class="customer-form">
+      <div class="form-group"><label for="customer-name">Nama Pemesan:</label><input type="text" id="customer-name" placeholder="Masukkan nama Anda"></div>
+      <div class="form-group"><label for="customer-address">Alamat/Asal:</label><input type="text" id="customer-address" placeholder="Masukkan alamat/asal Anda"></div>
+    </div>
+    <a class="whatsapp-button" id="wa-button" href="#" target="_blank">Pesan Sekarang via WhatsApp</a>
+  </section>
+
+  <footer>
+    <p>Follow kami di Instagram: <a href="https://instagram.com/kulinerpati" target="_blank" rel="noopener noreferrer">@kulinerpati</a></p>
+    <p>&copy; 2025 DokaFood. All rights reserved.</p>
+  </footer>
+
+  <div id="level-modal" class="modal">
+    <div class="modal-content">
+        <h3 id="modal-title">Pilih Level untuk</h3>
+        <div id="level-options-container" class="level-options"></div>
+        <button id="modal-add-to-cart" class="action-btn">Tambah ke Keranjang</button>
+    </div>
+  </div>
+  
+  <div id="toast-notification"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const menuData = [
+        { 
+          name: 'Mie dokaBar', category: 'mie', image: 'https://via.placeholder.com/300x200/ffcccb/d62828?text=Mie+dokaBar',
+          price_info: 'Mulai dari Rp11.000',
+          variants: [
+            { level: 'Original', price: 11000 }, { level: 'Sedang', price: 12000 }, { level: 'Pedas', price: 13000 }
+          ]
+        },
+        { name: 'Pisang Original', price: 8000, category: 'pisang', image: 'https://via.placeholder.com/300x200/fff4e6/f77f00?text=Pisang+Original' },
+        { name: 'Pisang Coklat', price: 10000, category: 'pisang', image: 'https://via.placeholder.com/300x200/fff4e6/f77f00?text=Pisang+Coklat' },
+        { name: 'Pisang Coklat Keju', price: 13000, category: 'pisang', image: 'https://via.placeholder.com/300x200/fff4e6/f77f00?text=Pisang+Coklat+Keju' },
+        { name: 'Pisang Tiramisu', price: 14000, category: 'pisang', image: 'https://via.placeholder.com/300x200/fff4e6/f77f00?text=Pisang+Tiramisu' },
+        { name: 'Es Teh', price: 3000, category: 'minuman', image: 'https://via.placeholder.com/300x200/e0f7fa/00bcd4?text=Es+Teh' },
+      ];
+      
+      const menuGrid = document.getElementById('menu-grid');
+      const cartItemsContainer = document.getElementById('cart-items');
+      const totalDisplay = document.getElementById('total');
+      const waButton = document.getElementById('wa-button');
+      const emptyCartMessage = document.getElementById('empty-cart-message');
+      const filterControls = document.querySelector('.filter-controls');
+      const levelModal = document.getElementById('level-modal');
+      const modalTitle = document.getElementById('modal-title');
+      const levelOptionsContainer = document.getElementById('level-options-container');
+      const modalAddToCartBtn = document.getElementById('modal-add-to-cart');
+      const toast = document.getElementById('toast-notification');
+
+      // === KERANJANG SELALU KOSONG DI AWAL ===
+      let cart = new Map();
+
+      function renderMenu(filter = 'semua') {
+        menuGrid.innerHTML = '';
+        const filteredMenu = filter === 'semua' ? menuData : menuData.filter(item => item.category === filter);
+        filteredMenu.forEach((item, index) => {
+          const itemDiv = document.createElement('div');
+          itemDiv.classList.add('item');
+          itemDiv.dataset.index = index;
+          
+          let priceHTML = item.variants ? `<span class="price-info">${item.price_info}</span>` : `<strong>Rp${item.price.toLocaleString('id-ID')}</strong>`;
+          let buttonHTML = item.variants ? `<button class="action-btn choose-level-btn">Pilih Level</button>` : `<button class="action-btn add-to-cart-btn">Tambah ke Keranjang</button>`;
+          
+          itemDiv.innerHTML = `<img src="${item.image}" alt="${item.name}"><h3>${item.name}</h3>${priceHTML}${buttonHTML}`;
+          menuGrid.appendChild(itemDiv);
+        });
+      }
+      
+      function openLevelModal(itemIndex) {
+        const item = menuData[itemIndex];
+        if(!item?.variants) return;
+        modalTitle.textContent = `Pilih Level untuk ${item.name}`;
+        levelOptionsContainer.innerHTML = '';
+        item.variants.forEach((variant, index) => {
+          levelOptionsContainer.innerHTML += `
+            <div class="level-option">
+              <label>
+                <span><input type="radio" name="level" value="${index}" ${index === 0 ? 'checked' : ''}>${variant.level}</span>
+                <span class="price">Rp${variant.price.toLocaleString('id-ID')}</span>
+              </label>
+            </div>`;
+        });
+        modalAddToCartBtn.dataset.baseName = item.name;
+        levelModal.style.display = 'flex';
+      }
+
+      function addToCart(name, price) {
+        cart.has(name) ? cart.get(name).quantity++ : cart.set(name, { price: price, quantity: 1 });
+        renderCart();
+        showToast(`"${name}" ditambahkan!`);
+        document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      function updateQuantity(name, change) {
+        if (!cart.has(name)) return;
+        cart.get(name).quantity += change;
+        if (cart.get(name).quantity <= 0) cart.delete(name);
+        renderCart();
+      }
+
+      function renderCart() {
+        cartItemsContainer.innerHTML = '';
+        let total = 0;
+        if (cart.size === 0) {
+          cartItemsContainer.appendChild(emptyCartMessage);
+          emptyCartMessage.style.display = 'block';
+        } else {
+          emptyCartMessage.style.display = 'none';
+          cart.forEach((item, name) => {
+            const div = document.createElement('div');
+            div.classList.add('cart-item');
+            div.innerHTML = `
+              <span class="cart-item-info">${name}</span>
+              <div class="cart-item-controls">
+                <button class="quantity-btn" data-name="${name}" data-action="decrease">-</button>
+                <span class="quantity-display">${item.quantity}</span>
+                <button class="quantity-btn" data-name="${name}" data-action="increase">+</button>
+                <button class="remove-item-btn" data-name="${name}">X</button>
+              </div>`;
+            cartItemsContainer.appendChild(div);
+            total += item.price * item.quantity;
+          });
+        }
+        totalDisplay.textContent = `Total: Rp${total.toLocaleString('id-ID')}`;
+        updateWhatsAppButton(total);
+      }
+      
+      function updateWhatsAppButton(total) {
+        const customerName = document.getElementById('customer-name').value;
+        const customerAddress = document.getElementById('customer-address').value;
+        
+        if (cart.size === 0 || !customerName.trim() || !customerAddress.trim()) {
+          waButton.href = '#';
+          waButton.classList.add('disabled');
+        } else {
+          waButton.classList.remove('disabled');
+          let waText = `Halo DokaFood! Saya ingin pesan:%0A%0A`;
+          cart.forEach((item, name) => { waText += `*${item.quantity}x* ${name}%0A`; });
+          waText += `-------------------------------%0A*Total: Rp${total.toLocaleString('id-ID')}*%0A-------------------------------%0A%0A`;
+          waText += `*Nama Pemesan:* ${customerName}%0A*Alamat/Asal:* ${customerAddress}%0A%0ATerima kasih!`;
+          waButton.href = `https://wa.me/6282136864085?text=${waText}`;
+        }
+      }
+      
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 2500);
+      }
+      
+      filterControls.addEventListener('click', (e) => {
+        if(e.target.classList.contains('filter-btn')) {
+          document.querySelector('.filter-btn.active').classList.remove('active');
+          e.target.classList.add('active');
+          renderMenu(e.target.dataset.filter);
+        }
+      });
+      
+      menuGrid.addEventListener('click', (e) => {
+        const itemElement = e.target.closest('.item');
+        if (!itemElement) return;
+        const itemIndex = parseInt(itemElement.dataset.index, 10);
+        const itemData = menuData[itemIndex];
+        if(!itemData) return;
+
+        if (e.target.classList.contains('add-to-cart-btn')) {
+          addToCart(itemData.name, itemData.price);
+        } else if (e.target.classList.contains('choose-level-btn')) {
+          openLevelModal(itemIndex);
+        }
+      });
+
+      modalAddToCartBtn.addEventListener('click', () => {
+        const selectedRadio = document.querySelector('input[name="level"]:checked');
+        if (!selectedRadio) { showToast('Silakan pilih level dahulu.'); return; }
+        
+        const baseName = modalAddToCartBtn.dataset.baseName;
+        const itemData = menuData.find(item => item.name === baseName);
+        if(!itemData) return;
+        const selectedVariant = itemData.variants[selectedRadio.value];
+        const finalName = `${baseName} - ${selectedVariant.level}`;
+
+        addToCart(finalName, selectedVariant.price);
+        levelModal.style.display = 'none';
+      });
+
+      levelModal.addEventListener('click', (e) => { if (e.target === levelModal) levelModal.style.display = 'none'; });
+      cartItemsContainer.addEventListener('click', (e) => {
+        const name = e.target.dataset.name;
+        if (e.target.classList.contains('quantity-btn')) {
+          updateQuantity(name, e.target.dataset.action === 'increase' ? 1 : -1);
+        } else if (e.target.classList.contains('remove-item-btn')) {
+          cart.delete(name); renderCart();
+        }
+      });
+      document.getElementById('customer-name').addEventListener('input', renderCart);
+      document.getElementById('customer-address').addEventListener('input', renderCart);
+      waButton.addEventListener('click', (e) => {
+        if (waButton.classList.contains('disabled')) {
+            e.preventDefault();
+            showToast('Isi keranjang, nama, & alamat dahulu!');
+        }
+      });
+
+      renderMenu();
+      renderCart();
+    });
+  </script>
+</body>
+</html>
