@@ -80,7 +80,7 @@
     <h2>Makan Enak ala DokaFood!</h2>
     <p>Pesan menu kekinian favoritmu sekarang juga, dijamin bikin ketagihan!</p>
     <div class="cta-buttons">
-      <a href="https://wa.me/6282136864085" target="_blank" rel="noopener noreferrer">Hubungi Kami</a>
+      <a href="https://wa.me/628123456789" target="_blank" rel="noopener noreferrer">Hubungi Kami</a>
       <a href="https://instagram.com/kulinerpati" target="_blank" rel="noopener noreferrer">Lihat Instagram</a>
     </div>
   </section>
@@ -124,19 +124,21 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // ===== PUSAT DATA MENU =====
+      // Ganti nama file gambar di sini sesuai dengan file yang Anda unggah di folder 'images'
       const menuData = [
         { 
-          name: 'Mie dokaBar', category: 'mie', image: 'https://via.placeholder.com/300x200/ffcccb/d62828?text=Mie+dokaBar',
+          name: 'Mie dokaBar', category: 'mie', image: 'images/mie-dokabar.jpg',
           price_info: 'Mulai dari Rp11.000',
           variants: [
             { level: 'Original', price: 11000 }, { level: 'Sedang', price: 12000 }, { level: 'Pedas', price: 13000 }
           ]
         },
-        { name: 'Pisang Original', price: 8000, category: 'pisang', image: 'https://via.placeholder.com/300x200/fff4e6/f77f00?text=Pisang+Original' },
-        { name: 'Pisang Coklat', price: 10000, category: 'pisang', image: 'https://via.placeholder.com/300x200/fff4e6/f77f00?text=Pisang+Coklat' },
-        { name: 'Pisang Coklat Keju', price: 13000, category: 'pisang', image: 'https://via.placeholder.com/300x200/fff4e6/f77f00?text=Pisang+Coklat+Keju' },
-        { name: 'Pisang Tiramisu', price: 14000, category: 'pisang', image: 'https://via.placeholder.com/300x200/fff4e6/f77f00?text=Pisang+Tiramisu' },
-        { name: 'Es Teh', price: 3000, category: 'minuman', image: 'https://via.placeholder.com/300x200/e0f7fa/00bcd4?text=Es+Teh' },
+        { name: 'Pisang Original', price: 8000, category: 'pisang', image: 'images/pisang-original.jpg' },
+        { name: 'Pisang Coklat', price: 10000, category: 'pisang', image: 'images/pisang-coklat.jpg' },
+        { name: 'Pisang Coklat Keju', price: 13000, category: 'pisang', image: 'images/pisang-coklat-keju.jpg' },
+        { name: 'Pisang Tiramisu', price: 14000, category: 'pisang', image: 'images/pisang-tiramisu.jpg' },
+        { name: 'Es Teh', price: 3000, category: 'minuman', image: 'images/es-teh.jpg' },
       ];
       
       const menuGrid = document.getElementById('menu-grid');
@@ -151,7 +153,7 @@
       const modalAddToCartBtn = document.getElementById('modal-add-to-cart');
       const toast = document.getElementById('toast-notification');
 
-      // === KERANJANG SELALU KOSONG DI AWAL ===
+      // Keranjang SELALU dimulai dari kosong.
       let cart = new Map();
 
       function renderMenu(filter = 'semua') {
@@ -206,10 +208,8 @@
         cartItemsContainer.innerHTML = '';
         let total = 0;
         if (cart.size === 0) {
-          cartItemsContainer.appendChild(emptyCartMessage);
-          emptyCartMessage.style.display = 'block';
+          cartItemsContainer.innerHTML = '<p id="empty-cart-message" style="display: block; text-align: center; color: var(--dark-gray); font-style: italic; padding: 1.5rem 0; font-size: 1.1rem;">Keranjang Anda kosong. Silakan pilih menu di atas.</p>';
         } else {
-          emptyCartMessage.style.display = 'none';
           cart.forEach((item, name) => {
             const div = document.createElement('div');
             div.classList.add('cart-item');
@@ -238,11 +238,13 @@
           waButton.classList.add('disabled');
         } else {
           waButton.classList.remove('disabled');
+          // --- GANTI NOMOR WHATSAPP ANDA DI SINI ---
+          const nomorWA = '6281234567890';
           let waText = `Halo DokaFood! Saya ingin pesan:%0A%0A`;
           cart.forEach((item, name) => { waText += `*${item.quantity}x* ${name}%0A`; });
           waText += `-------------------------------%0A*Total: Rp${total.toLocaleString('id-ID')}*%0A-------------------------------%0A%0A`;
           waText += `*Nama Pemesan:* ${customerName}%0A*Alamat/Asal:* ${customerAddress}%0A%0ATerima kasih!`;
-          waButton.href = `https://wa.me/6282136864085?text=${waText}`;
+          waButton.href = `https://wa.me/${nomorWA}?text=${encodeURIComponent(waText)}`;
         }
       }
       
